@@ -159,13 +159,13 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
             switch ($authprovider) {
                 case 'google':
                 case 'linkedin':
+                case 'facebook':
                     $postreturnvalues = json_decode($postreturnvalues);
                     $accesstoken = $postreturnvalues->access_token;
                     //$refreshtoken = $postreturnvalues->refresh_token;
                     //$expiresin = $postreturnvalues->expires_in;
                     //$tokentype = $postreturnvalues->token_type;
                     break;
-                case 'facebook':
                 case 'github':
                     parse_str($postreturnvalues, $returnvalues);
                     $accesstoken = $returnvalues['access_token'];
@@ -201,10 +201,11 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
                     case 'facebook':
                         $params = array();
                         $params['access_token'] = $accesstoken;
+                        $params['fields'] = 'first_name,last_name,email';
                         $postreturnvalues = $curl->get('https://graph.facebook.com/me', $params);
                         $facebookuser = json_decode($postreturnvalues);
                         $useremail = $facebookuser->email;
-                        $verified = $facebookuser->verified;
+                        $verified = true;
                         break;
 
                     case 'messenger':
